@@ -1,14 +1,18 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { connect } from '../databases/connecte'
-const UniteEnseignement = connect.define('uniteE', {
+
+
+interface IUnEnseignement extends Model<IUniteEnseignement>, IUniteEnseignement { }
+const UniteEnseignement = connect.define<IUnEnseignement>('uniteE', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    designation: {
-        type: DataTypes.STRING,
-    }
+    codeUE: DataTypes.STRING,
+    designation: DataTypes.STRING,
+    credit: DataTypes.STRING,
+    semetre: DataTypes.STRING,
 }, { paranoid: true });
 
 export { UniteEnseignement }

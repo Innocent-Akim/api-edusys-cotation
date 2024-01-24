@@ -4,9 +4,8 @@ import * as dotenv from 'dotenv'
 import { initialize } from "../databases/init";
 import router from "../routes/index.routes";
 import { HttpStatusCode } from "../enum/httpStatusCode";
-import { sendFeedbackDestroyFacture } from "views/nodemail";
 dotenv.config();
-const port = process.env.PORT || 8001;
+const port = process.env.PORT || 8004;
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +22,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     }
     next();
 });
-app.use("/action/api/v1/", router);
+app.use("/cotation/api/v1/", router);
 app.use((req, res, next) => {
     res.status(HttpStatusCode.NotFound).json({ msg: "Not Found" })
 })

@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { connect } from '../databases/connecte'
-const Verification = connect.define('semestre', {
+const Semestre = connect.define('semestre', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -9,4 +9,4 @@ const Verification = connect.define('semestre', {
     designation: DataTypes.STRING,
 }, { paranoid: true });
 
-export { Verification }
+export { Semestre }

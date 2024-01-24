@@ -1,6 +1,8 @@
 import jwt, { Secret, JwtPayload } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from '../enum/httpStatusCode';
+import * as dotenv from 'dotenv';
+dotenv.config();
 // import { ILogin } from '../types';
 
 export interface CustomerRequest extends Request { user: any | JwtPayload }
