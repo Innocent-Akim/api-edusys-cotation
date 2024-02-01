@@ -1,15 +1,32 @@
 import { Response, Request, NextFunction } from "express";
 import * as models from "../../models";
 import { HttpStatusCode } from "../../enum/httpStatusCode";
+import dayjs from "dayjs";
 
 export default {
-    createUE: async (req: Request, res: Response, next: NextFunction) => {
+    create: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const bodyResquest = req.body;
-            const response = await models.UniteEnseignement.create({ ...bodyResquest });
+            const bodyResquest: IEtudiant = req.body;
+            const existed = await models.Etudiants.findOne({ where: { [models.Op.and]: [{ nom: bodyResquest.nom }, { prenom: bodyResquest.prenom }] } });
+            if (existed) return res.status(HttpStatusCode.Conflict).json({ msg: "L'étudiant existe déjà dans la base de données", data: null });
+
+            const response = await models.Etudiants.create({ ...bodyResquest });
             if (response) {
-                res.status(HttpStatusCode.Created).json({ msg: 'Nouvel élément ajouté avec succès', data: response });
-                return;
+                const inscription = await models.Inscription.create({
+                    annee: dayjs().format('YYYY'),
+                    dateInscription: dayjs().format('YYYY-MM-DD'),
+                    etudiantId: response.id
+                });
+                const itemsUE = await models.UniteEnseignement.findAll();
+                const responseData = itemsUE.map((item: any) => ({
+                    uniteEId: item?.id,
+                    inscriptionId: inscription.id,
+                    dateInscription: response?.createdAt,
+                    is_active: false,
+                }));
+                const responseVerified = await models.Verification.bulkCreate(responseData as any);
+                if (responseVerified) return res.status(HttpStatusCode.Created).json({ msg: 'Nouvel élément ajouté avec succès', data: response });
+
             } else {
                 res.status(HttpStatusCode.BadRequest).json({ msg: "Une erreur est survenue. Veuillez réessayer.", data: null });
                 return
@@ -20,9 +37,9 @@ export default {
         }
     },
 
-    findAllUE: async (req: Request, res: Response, next: NextFunction) => {
+    find: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const response = await models.UniteEnseignement.findAll();
+            const response = await models.Etudiants.findAll();
             if (response) {
                 res.status(HttpStatusCode.Ok).json({ msg: 'Voici la liste des éléments que vous avez demandée ', data: response });
                 return;
@@ -64,7 +81,7 @@ export default {
     deleteUE: async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = req.query;
-            const response = await models.UniteEnseignement.destroy({ where: id });
+            const response = await models.Etudiants.destroy({ where: id });
             if (response) {
                 res.status(HttpStatusCode.Ok).json({ msg: 'La mise à jour a été effectuée avec succès.', data: response });
                 return;

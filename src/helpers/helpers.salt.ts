@@ -1,4 +1,5 @@
 import { hash, compare } from "bcrypt";
+import dayjs from "dayjs";
 
 export const initHash = async (password: string) => {
     return await hash(password, 10);
@@ -18,3 +19,10 @@ export const genererMotDePasseEntier = (longueur: number): string => {
     }
     return motDePasse;
 };
+
+export const anneeAcademic = (semestre: number) => {
+    switch (semestre) {
+        case 1:
+            return dayjs().format('YYYY');
+    }
+}

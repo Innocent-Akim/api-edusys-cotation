@@ -1,12 +1,14 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { connect } from '../databases/connecte'
-const Verification = connect.define('verification', {
+
+export interface ModelVerification extends Model<IVerification>, IVerification { }
+const Verification = connect.define<ModelVerification>('verification', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
-    dateInscription: DataTypes.DATE,
+    dateInscription: DataTypes.STRING,
     is_active: DataTypes.BOOLEAN,
 }, { paranoid: true });
 

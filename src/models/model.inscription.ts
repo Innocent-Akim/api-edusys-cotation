@@ -1,6 +1,8 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import { connect } from '../databases/connecte'
-const Inscription = connect.define('inscription', {
+
+export interface ModelInscription extends Model<IInscription>, IInscription { }
+const Inscription = connect.define<ModelInscription>('inscription', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

@@ -16,6 +16,7 @@ export {
     Verification,
     UniteEnseignement,
     Semestre,
-    User
+    User,
+
 
 }
